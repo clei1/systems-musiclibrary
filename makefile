@@ -1,9 +1,9 @@
-all: music_library.c music_library.h
-	gcc -o music_library.o music_library.c
+all: songs.c songs.h
+	gcc -o songs.o songs.c
 
 run: all
-	./music_library.o
+	./songs.o
 
 clean:
-	rm *.out
+	rm *.o*
 	rm *~
