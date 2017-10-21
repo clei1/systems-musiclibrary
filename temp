@@ -1,0 +1,35 @@
+
+struct song_node * insert_in_order(struct song_node * song, char * name, char * artist){
+  struct song_node * new_song;
+  new_song = (struct song_node *) malloc(sizeof(struct song_node));
+  strcpy(new_name -> name, name);
+  strcpy(new_name -> artist, artist);
+
+  //if there are no artists starting with the artist's first letter
+  if(song){
+    new_song -> next = NULL;
+    song = new_song;
+    return song;
+  }
+  
+  while(//should be inserted at the end of the song list
+	song -> next ||
+	//alphabetized artists
+	(strcmp((song -> next) -> artist, artist) < 0  &&
+	 //alphabetized artist's songs
+	 strcmp((song -> next) -> name, name) < 0))
+  =  {
+      //iterate to the correct position
+      song = song -> next;
+    }
+
+  //sets the inserted song's next with the previous song in its position
+  new_song -> next = song -> next;
+  //sets the previous position song's next with the inserted song
+  song -> next = new_song;
+  return song;
+}
+
+void remove_song(){
+
+}
