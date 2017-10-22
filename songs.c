@@ -50,6 +50,7 @@ struct song_node* insert(struct song_node * song, char* artist, char* name){
 struct song_node* free_list(struct song_node* song){
   struct song_node* next_song;
   while(song){
+    printf("freeing song: %s - %s\n", song -> artist, song -> name);
     next_song = song -> next;
     free(song);
     song = next_song;
@@ -148,19 +149,21 @@ struct song_node* remove_song(struct song_node* song, char* artist, char* name){
     return song;
   }
 
-  //case 2: second song + needs to be removed
+  struct song_node* first_song = song;
+
+  //case 2: second song+ needs to be removed
   target = song -> next;
   while(target){//iterate through all the songs
     if(songcmp(target -> artist, target -> name, artist, name) == 0){
       song -> next = target -> next;
       free(target);
-      return song;
+      return first_song;
     }
     song = target;
     target = song -> next;
   }
 
   //case 3: song does not exist
-  return song;
+  return first_song;
 }
 

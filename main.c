@@ -5,30 +5,15 @@
 #include "music_library.c"
 
 int main(){
-  printf("%d\n", strcmp("radioheadparanoid android","ac/dcthunderstruck"));
-  printf("%d\n", strcmp("radioheadparanoid android", "pink floydtime"));
-  printf("%d\n", strcmp("radioheadparanoid android", "radioheadstreet spirit (fade out)"));
-
   struct song_node * song = (struct song_node *) malloc(sizeof(struct song_node));
   strcpy(song -> artist, "ac/dc");
   strcpy(song -> name, "thunderstruck");
   song -> next = NULL;
-
-  print_songs(song);
-  
   song = insert(song, "pink floyd", "time");
-  print_songs(song);
-  
   song = insert(song, "radiohead", "street spirit (fade out)");
-  print_songs(song);
-
   song = insert(song, "radiohead", "paranoid android");
-  print_songs(song);
-   
   song = insert(song, "pearl jam",  "even flow");
-  print_songs(song);
   song = insert(song, "pearl jam", "yellow ledbetter");
-  print_songs(song);
   song = insert(song, "pearl jam",  "alive");
   
   printf("LINKED LIST TESTS");
@@ -69,12 +54,12 @@ int main(){
   printf("====================================\n\n");
   
   printf("Testing remove:\n");
-  remove_song(song, "pink floyd", "time");
+  song = remove_song(song, "pink floyd", "time");
   printf("\n");
-  remove_song(song, "pink floyd", "time");
+  song = remove_song(song, "pink floyd", "time");
 
   printf("\n");
-  remove_song(song, "ac/dc", "thunderstruck");
+  song = remove_song(song, "ac/dc", "thunderstruck");
   print_songs(song);
   printf("\n====================================\n\n");
   
@@ -86,8 +71,83 @@ int main(){
   printf("memory that has been freed, but not cleared:\n");
   print_songs(song);
   printf("\n====================================\n\n");
+
+
+  struct song_node * table[27];
+  int alpha = 0;
+  while(alpha < 26){
+    alpha ++;
+    table[alpha] = NULL;
+  }
+  table[26] = 0;
+  
+  insert_song(table, "ac/dc", "thunderstruck");
+  insert_song(table, "radiohead","paranoid android");
+  insert_song(table, "pearl jam", "alive");
+  insert_song(table, "presidents of the united states of america","peaches");
+  insert_song(table, "pearl jam","yellow ledbetter");
+  insert_song(table, "radiohead","street spirit (fade out)");
+  insert_song(table, "pearl jam", "even flow");
+  insert_song(table, "pink floyd","time");
+
+  printf("====================================\n\nMUSIC LIBRARY TESTS\n\n====================================\n");
+  printf("Testing print_library\n");
+  print_library(table);
+  printf("====================================\n\n");
+
+  printf("Testing print_library\n");
+  print_letter('a', table);
+  printf("====================================\n\n");
+
+  printf("Testing find:\n");
+  find("pearl jam", "alive", table);
+  find("pearl jam", "notalive", table);
+  printf("====================================\n\n");
+
+  printf("Testing find artist:\n");
+  find_lib_artist("pearl jam", table);
+  find_lib_artist("pink floyd", table);
+  find_lib_artist("bob dylan", table);
+  printf("====================================\n\n");
+
+  printf("Testing remove_song\n");
+  remove_lib_song(table,"pearl jam", "alive");
+  print_library(table);
+  remove_lib_song(table, "pearl jam","yellow ledbetter");
+  print_library(table);
+  printf("====================================\n\n");
+
+  printf("Testing clear_library\n");
+  clear_library(table);
+  printf("\n");
+
+  printf("Library after clear\n");
+  print_library(table);
+  printf("====================================\n\n");
+
+  printf("Adding songs to empty library\n");
+  insert_song(table, "ac/dc", "thunderstruck");
+  insert_song(table, "radiohead","paranoid android");
+  insert_song(table, "pearl jam", "alive");
+  insert_song(table, "presidents of the united states of america","peaches");
+  insert_song(table, "pearl jam","yellow ledbetter");
+  insert_song(table, "radiohead","street spirit (fade out)");
+  insert_song(table, "pearl jam", "even flow");
+  insert_song(table, "pink floyd","time");
+  print_library(table);
+  print_artist("pearl jam", table); 
+  print_artist("ac/dc", table);
+  printf("====================================\n\n");
+  
+  printf("Testing shuffle\n");
+  srand(time(NULL));
+  print_song(shuffle(table));
+  print_song(shuffle(table));
+  print_song(shuffle(table));
+  print_song(shuffle(table));
+  print_song(shuffle(table));
+  print_song(shuffle(table));
   
   return 0;
-  
 }
 
