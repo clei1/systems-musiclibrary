@@ -29,6 +29,24 @@ struct song_node* insert_front(struct song_node * song, char* artist, char* name
   return new_song;
 }
 
+struct song_node* insert(struct song_node * song, char* artist, char* name){
+  struct song_node * front_song = song;
+  if(songcmp(song -> artist, song -> name, artist, name) > 0){
+    return insert_front(song, artist, name);
+  }
+  while(song -> next){
+    if(songcmp(artist, name, (song -> next) -> artist, (song -> next) -> name) < 0)
+      break;
+    song = song -> next;
+  }
+  struct song_node * new_song = (struct song_node *) malloc(sizeof(struct song_node));
+  strcpy(new_song -> artist, artist);
+  strcpy(new_song -> name, name);
+  new_song -> next = song -> next;
+  song -> next = new_song;
+  return front_song;
+}
+
 struct song_node* free_list(struct song_node* song){
   struct song_node* next_song;
   while(song){
@@ -76,10 +94,20 @@ struct song_node* find_song(struct song_node* song, char* artist, char* name){
 
 int songcmp(char* artist_one, char* name_one, char* artist_two, char* name_two){
   printf("comparing [%s: %s] to [%s: %s]\n", artist_one, name_one, artist_two, name_two);
-  if(strcmp(artist_one, artist_two) == 0){
+  char song_one[512];
+  strcpy(song_one, artist_one);
+  strcat(song_one, name_one);
+
+  char song_two[512];
+  strcpy(song_two, artist_two);
+  strcat(song_two, name_two);
+  return strcmp(song_one, song_two);
+  /*
+    if(strcmp(artist_one, artist_two) == 0){
     return strcmp(name_one, name_two);
-  }
-  return strcmp(artist_one, artist_two);
+    }
+    return strcmp(artist_one, artist_two);
+  */
 }
 
 /*
@@ -136,20 +164,33 @@ struct song_node* remove_song(struct song_node* song, char* artist, char* name){
   return song;
 }
 
-/*
+
 int main(){
+  printf("%d\n", strcmp("radioheadparanoid android","ac/dcthunderstruck"));
+  printf("%d\n", strcmp("radioheadparanoid android", "pink floydtime"));
+  printf("%d\n", strcmp("radioheadparanoid android", "radioheadstreet spirit (fade out)"));
 
   struct song_node * song = (struct song_node *) malloc(sizeof(struct song_node));
   strcpy(song -> artist, "ac/dc");
   strcpy(song -> name, "thunderstruck");
   song -> next = NULL;
 
-  song = insert_front(song, "radiohead", "street spirit (fade out)");
-  song = insert_front(song, "radiohead", "paranoid android");
-  song = insert_front(song, "pink floyd", "time");
-  song = insert_front(song, "pearl jam", "yellow ledbetter");
-  song = insert_front(song, "pearl jam",  "even flow");
-  song = insert_front(song, "pearl jam",  "alive");
+  print_songs(song);
+  
+  song = insert(song, "pink floyd", "time");
+  print_songs(song);
+  
+  song = insert(song, "radiohead", "street spirit (fade out)");
+  print_songs(song);
+
+  song = insert(song, "radiohead", "paranoid android");
+  print_songs(song);
+   
+  song = insert(song, "pearl jam",  "even flow");
+  print_songs(song);
+  song = insert(song, "pearl jam", "yellow ledbetter");
+  print_songs(song);
+  song = insert(song, "pearl jam",  "alive");
   
   printf("LINKED LIST TESTS");
   printf("\n====================================\n\n");
@@ -157,57 +198,58 @@ int main(){
   printf("Testing print_songs:\n");
   print_songs(song);
   printf("====================================\n\n");
-  
-  printf("Testing print_song:\n");
-  print_song(song);
-  printf("====================================\n\n");
+  /*
+    printf("Testing print_song:\n");
+    print_song(song);
+    printf("====================================\n\n");
 
-  printf("Testing find_song:\n");
-  struct song_node* found = find_song(song, "pearl jam", "yellow ledbetter");
-  find_song(song, "pearl jam", "daughter");
-  printf("====================================\n\n");
+    printf("Testing find_song:\n");
+    struct song_node* found = find_song(song, "pearl jam", "yellow ledbetter");
+    find_song(song, "pearl jam", "daughter");
+    printf("====================================\n\n");
 
-  printf("Testing find_artist:\n");
-  struct song_node* song_one = find_artist(song, "pearl jam");
-  struct song_node* song_two = song_two = find_artist(song, "radiohead");
-  find_artist(song, "presidents of the united states of america");
-  printf("====================================\n\n");
+    printf("Testing find_artist:\n");
+    struct song_node* song_one = find_artist(song, "pearl jam");
+    struct song_node* song_two = song_two = find_artist(song, "radiohead");
+    find_artist(song, "presidents of the united states of america");
+    printf("====================================\n\n");
   
-  printf("Testing songcmp (helper function):\n");
-  printf("  %d\n", songcmp(song_one -> artist, song_one -> name, song_one -> artist, song_one -> name));
-  printf("  %d\n", songcmp(song_one -> artist, song_one -> name, song_two -> artist, song_two -> name));
-  printf("  %d\n", songcmp(song_two -> artist, song_two -> name, song_one -> artist, song_one -> name));
-  printf("====================================\n\n");
+    printf("Testing songcmp (helper function):\n");
+    printf("  %d\n", songcmp(song_one -> artist, song_one -> name, song_one -> artist, song_one -> name));
+    printf("  %d\n", songcmp(song_one -> artist, song_one -> name, song_two -> artist, song_two -> name));
+    printf("  %d\n", songcmp(song_two -> artist, song_two -> name, song_one -> artist, song_one -> name));
+    printf("====================================\n\n");
     
-  printf("Testing random:\n");
-  srand(time(NULL));
-  print_song(random_song(song));
-  print_song(random_song(song));
-  print_song(random_song(song));
-  print_song(random_song(song));
-  print_song(random_song(song));
-  print_song(random_song(song));
-  printf("====================================\n\n");
+    printf("Testing random:\n");
+    srand(time(NULL));
+    print_song(random_song(song));
+    print_song(random_song(song));
+    print_song(random_song(song));
+    print_song(random_song(song));
+    print_song(random_song(song));
+    print_song(random_song(song));
+    printf("====================================\n\n");
   
-  printf("Testing remove:\n");
-  remove_song(song, "pink floyd", "time");
-  printf("\n");
-  remove_song(song, "pink floyd", "time");
+    printf("Testing remove:\n");
+    remove_song(song, "pink floyd", "time");
+    printf("\n");
+    remove_song(song, "pink floyd", "time");
 
-  printf("\n");
-  remove_song(song, "ac/dc", "thunderstruck");
-  print_songs(song);
-  printf("\n====================================\n\n");
+    printf("\n");
+    remove_song(song, "ac/dc", "thunderstruck");
+    print_songs(song);
+    printf("\n====================================\n\n");
   
-  printf("Testing free_list:\n");
-  print_songs(song);
-  song_one = free_list(song);
-  printf("list after free_list:\n");
-  print_songs(song_one);
-  printf("memory that has been freed, but not cleared:\n");
-  print_songs(song);
-  printf("\n====================================\n\n");
+    printf("Testing free_list:\n");
+    print_songs(song);
+    song_one = free_list(song);
+    printf("list after free_list:\n");
+    print_songs(song_one);
+    printf("memory that has been freed, but not cleared:\n");
+    print_songs(song);
+    printf("\n====================================\n\n");
   
-  return 0;
+    return 0;
+  */
 }
-*/
+
