@@ -136,6 +136,7 @@ struct song_node* remove_song(struct song_node* song, char* artist, char* name){
   return song;
 }
 
+/*
 int main(){
 
   struct song_node * song = (struct song_node *) malloc(sizeof(struct song_node));
@@ -209,3 +210,4 @@ int main(){
   
   return 0;
 }
+*/
